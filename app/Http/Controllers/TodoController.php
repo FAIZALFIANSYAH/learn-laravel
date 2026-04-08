@@ -3,52 +3,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\Todo;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class todoController extends Controller
+class TodoController extends Controller
 {
+    /**
+     * Menampilkan daftar tugas milik user yang sedang login.
+     */
     public function index()
- {
-    //mengambil data dari tabel todos di db dari folder models
-    $semuaTugas = Todo::all();
+    {
+        // Filter: Hanya ambil data yang punya user_id sesuai user yang login
+        // Jika kamu belum menambah kolom user_id di database, gunakan Todo::all() dulu
+        $semuaTugas = Todo::where('user_id', Auth::id())->latest()->get();
 
-    return view('todos.index',compact ('semuaTugas'));
- }
+        return view('todos.index', compact('semuaTugas'));
+    }
 
+    /**
+     * Menyimpan tugas baru.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'task' => 'required|string|max:255',
+        ]);
 
-public function store (Request $request)
-{
-    //1. menangkap data dari inputan yang bernama task
-    //2.menyimpan ke db melewati /models todo
+        Todo::create([
+            'user_id' => Auth::id(), // Hubungkan tugas dengan ID user yang login
+            'task' => $request->task,
+            'is_completed' => false
+        ]);
 
-    Todo::create([
-        'task' => $request->task,
-        'is_completed' => false //false sebagai status awal
-    ]);
+        return redirect()->route('todos.index')->with('success', 'Tugas berhasil ditambah!');
+    }
 
-    //3.setelah menyimpan ke db, selanjutnya memberikan data ke halaman web kembali
-    return redirect('/todos');
-}
+    /**
+     * Mengubah status (Selesai/Batal).
+     */
+    public function update($id)
+    {
+        // Temukan tugas, tapi pastikan itu milik user yang login (keamanan extra)
+        $todo = Todo::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        
+        $todo->update([
+            'is_completed' => !$todo->is_completed
+        ]);
 
+        return redirect()->back();
+    }
 
-public function update($id)
-{
-    $todo = Todo::find($id);
-    $todo->update([
-        'is_completed' => !$todo->is_completed //memngubah status false ke true
-    ]);
+    /**
+     * Menghapus tugas.
+     */
+    public function destroy($id)
+    {
+        $todo = Todo::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $todo->delete();
 
-    return redirect('/todos');
-}
-
-
-public function destroy($id)
-{
-     $todo = Todo::find($id);
-    $todo->delete();
-
-    return redirect('todos');   
-}
-
+        return redirect()->back()->with('success', 'Tugas berhasil dihapus!');
+    }
 }

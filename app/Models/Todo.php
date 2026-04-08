@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Todo extends Model
 {
     //
-    protected $fillable = ['task', 'is_completed'];
+    protected $fillable = ['user_id','task', 'is_completed'];
 }
