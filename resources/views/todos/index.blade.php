@@ -19,7 +19,7 @@
                 </form>
 
                 <div class="space-y-4">
-                    @forelse($semuaTugas as $item)
+                    @forelse($allTask as $item)
                         <div class="group flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-indigo-200 hover:shadow-md transition duration-200">
                             <div class="flex items-center gap-4">
                                 <div class="w-2 h-2 rounded-full {{ $item->is_completed ? 'bg-green-400' : 'bg-indigo-400' }}"></div>

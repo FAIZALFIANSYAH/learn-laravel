@@ -15,9 +15,9 @@ class TodoController extends Controller
     {
         // Filter: Hanya ambil data yang punya user_id sesuai user yang login
         // Jika kamu belum menambah kolom user_id di database, gunakan Todo::all() dulu
-        $semuaTugas = Todo::where('user_id', Auth::id())->latest()->get();
+        $allTask = Todo::where('user_id', Auth::id())->latest()->get();
 
-        return view('todos.index', compact('semuaTugas'));
+        return view('todos.index', compact('allTask'));
     }
 
     /**
