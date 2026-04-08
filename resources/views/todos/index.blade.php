@@ -30,7 +30,7 @@
                             </div>
 
                             <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                <form action="{{ route('todos.store') }}" method="POST">
+                                <form action="{{ route('todos.update', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit" 
@@ -42,7 +42,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('todos.store') }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus tugas ini?')">
+                                <form action="{{ route('todos.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus tugas ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg border border-red-100 bg-red-50 text-red-600 hover:bg-red-100 transition duration-200">
