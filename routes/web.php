@@ -21,10 +21,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route To-Do List (Fitur Kamu)
+    Route::get('/todos/create', [TodoController::class, 'create'])->name('todos.create');
     Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
     Route::post('/todos', [TodoController::class, 'store'])->name('todos.store');
     Route::patch('/todos/{id}', [TodoController::class, 'update'])->name('todos.update');
     Route::delete('/todos/{id}', [TodoController::class, 'destroy'])->name('todos.destroy');
+    Route::get('/todos/{todo}/edit', [TodoController::class, 'edit'])->name('todos.edit');
+Route::put('/todos/{todo}/update-task', [TodoController::class, 'updateTask'])->name('todos.update-task');
 });
 
 require __DIR__.'/auth.php';
